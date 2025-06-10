@@ -29,6 +29,9 @@ public class TaskManager {
     public void addSubTask(Subtask subtask){
         subtask.setTaskID(countID++);
         subtasks.put(subtask.getTaskID(),subtask);
+        //обновляем статус епика
+        int epicID = subtask.getEpicID();
+        epics.get(epicID).setStatus(getEpicStatus(epicID));
     }
 //методы для  получения всех задач   (пункт 2.a)
     public ArrayList<Task> getAllTask(){
@@ -42,5 +45,89 @@ public class TaskManager {
     public ArrayList<Subtask> getAllSubTask(){
         return new ArrayList<>(subtasks.values());
     }
+    //методы для  удаления всех задач   (пункт 2.b)
+    public void clearTasks(){
+        tasks.clear();
+    }
+
+    public void clearEpics(){
+        epics.clear();
+    }
+
+    public void clearSubtask(){
+        subtasks.clear();
+    }
+
+    //методы для  получения по идентификатору   (пункт 2.c)
+    public Task getTaskByID(int id){
+        return  tasks.get(id);
+    }
+
+    public Epic getEpicByID(int id){
+        return epics.get(id);
+    }
+
+    public Subtask getSubtaskByID(int id){
+        return subtasks.get(id);
+    }
+
+    //методы для  обновления  (пункт 2.e)
+    public void updateTask(Task task){
+        tasks.put(task.getTaskID(),task);
+    }
+
+    public void updateEpic(Epic epic){
+        epics.put(epic.getTaskID(),epic);
+    }
+
+    public void updateSubtask(Subtask subtask){
+        subtasks.put(subtask.getTaskID(),subtask);
+        //обновляем статус епика
+        int epicID = subtask.getEpicID();
+        epics.get(epicID).setStatus(getEpicStatus(epicID));
+    }
+
+    //методы для  удаления по идентификатору  (пункт 2.e)
+    public void eraseTaskByID(int id){
+        tasks.remove(id);
+    }
+
+    public void eraseEpicByID(int id){
+        epics.remove(id);
+    }
+
+    public void eraseSubtaskByID(int id){
+        subtasks.remove(id);
+    }
+    //получение списка задач епика 3.a
+    public ArrayList<Subtask> getAllEpicSubtask(int epicID){
+        ArrayList<Subtask> epicTasks = new ArrayList<>();
+        for (Subtask subtask : subtasks.values()){
+            if (subtask.getEpicID() == epicID) epicTasks.add(subtask);
+        }
+        return epicTasks;
+    }
+
+    private Status getEpicStatus(int epicID){
+        int statusNew = 0;
+        int statusDone = 0;
+        int count = 0;
+        if (epics.containsKey(epicID)){
+            for (Subtask subtask : subtasks.values() ){
+                if (subtask.getEpicID() == epicID){
+                    switch(subtask.getStatus()){
+                        case NEW -> statusNew++;
+                        case DONE -> statusDone++;
+                    }
+                    count++;
+                }
+            }
+        }
+        if (statusNew == count) return Status.NEW;
+        if (statusDone == count) return Status.DONE;
+        return Status.IN_PROGRESS;
+    }
+
+
 
 }
