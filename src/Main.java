@@ -3,57 +3,61 @@ import task.*;
 public class Main {
 
     public static void main(String[] args) {
-
         TaskManager manager = new TaskManager();
+        //Создайте две задачи, а также эпик с двумя подзадачами и  эпик с одной подзадачей.
+        Task task = new Task("task1 name", "task1 description", Status.NEW);
+        manager.addTask(task);
+        Task task2 = new Task("task2 name", "task2 description", Status.IN_PROGRESS);
+        manager.addTask(task2);
 
-        manager.addEpic(new Epic("epic1 name","epic1 description",Status.NEW));
-        manager.addEpic(new Epic("epic2 name","epic2 description",Status.NEW));
-        manager.addEpic(new Epic("epic3 name","epic3 description",Status.NEW));
 
-        for (Epic epic : manager.getAllEpic())
-            System.out.println(epic);
+        Epic epic = new Epic("epic1 name", "epic1 description", Status.NEW);
+        manager.addEpic(epic);
+        Subtask subtask1 = new Subtask("subtask1 epic1 name", "subtask1 epic1 description", Status.NEW, epic.getTaskID());
+        Subtask subtask2 = new Subtask("subtask2 epic1 name", "subtask2 epic1 description", Status.NEW, epic.getTaskID());
+        manager.addSubTask(subtask1);
+        manager.addSubTask(subtask2);
 
-        manager.addTask(new Task("task1 name","task1 description",Status.NEW));
-        manager.addTask(new Task("task2 name","task2 description",Status.NEW));
-        manager.addTask(new Task("task3 name","task3 description",Status.NEW));
+        Epic epic2 = new Epic("epic2 name", "epic2 description", Status.NEW);
+        manager.addEpic(epic2);
+        Subtask subtask3 = new Subtask("subtask1 epic2 name", "subtask1 epic2 description", Status.IN_PROGRESS, epic2.getTaskID());
+        manager.addSubTask(subtask3);
 
-        for (Task task : manager.getAllTask())
-            System.out.println(task);
+        //Распечатайте списки эпиков, задач и подзадач через
+        System.out.println("Task list : ");
+        System.out.println(manager.getAllTask());
 
-        manager.addSubTask(new Subtask("subtask1 name","subtask1 description",Status.NEW,1));
-        manager.addSubTask(new Subtask("subtask2 name","subtask2 description",Status.NEW,1));
-        manager.addSubTask(new Subtask("subtask3 name","subtask3 description",Status.NEW,2));
+        System.out.println("Epic list : ");
+        System.out.println(manager.getAllEpic());
 
-        for (Subtask subtask : manager.getAllSubTask())
-            System.out.println(subtask);
-        System.out.println("epic1 subtasks : ");
-        System.out.println(manager.getAllEpicSubtask(1));
-
-        System.out.println("epic2 subtasks : ");
-        System.out.println(manager.getAllEpicSubtask(2));
-
-        System.out.println("epic3 subtasks : ");
-        System.out.println(manager.getAllEpicSubtask(3));
-
-        System.out.println("epic1 status : ");
-        System.out.println(manager.getEpicByID(1).getStatus());
-
-        manager.getSubtaskByID(7).setStatus(Status.IN_PROGRESS);
-        System.out.println("epic1 status : ");
-        Subtask subtask = manager.getSubtaskByID(7);
-        subtask.setStatus(Status.IN_PROGRESS);
-        manager.updateSubtask(subtask);
-        System.out.println(manager.getEpicByID(1).getStatus());
-        for (Subtask subtask1 : manager.getAllSubTask()){
-            if (subtask1.getEpicID() == 1){
-                subtask = subtask1;
-                subtask.setStatus(Status.DONE);
-                manager.updateSubtask(subtask);
-            }
-        }
-        System.out.println(manager.getEpicByID(1).getStatus());
-        manager.eraseEpicByID(1);
-        System.out.println("subtask after epic deleted");
+        System.out.println("Subtask list : ");
         System.out.println(manager.getAllSubTask());
+        //Измените статусы созданных объектов, распечатайте их.
+        // Проверьте, что статус задачи и подзадачи сохранился,
+        // а статус эпика рассчитался по статусам подзадач
+        System.out.println("epic1 status before change " + manager.getEpicByID(epic.getTaskID()).getStatus());
+        //change epic1 subtask1 status
+        subtask1.setStatus(Status.IN_PROGRESS);
+        manager.updateSubtask(subtask1);
+        System.out.println("epic1 subtask1 status : " + manager.getSubtaskByID(subtask1.getTaskID()).getStatus());
+        System.out.println("epic1 status after change " + manager.getEpicByID(epic.getTaskID()).getStatus());
+        //change all subtask's status of epic1 to DONE
+        subtask1.setStatus(Status.DONE);
+        subtask2.setStatus(Status.DONE);
+
+        manager.updateSubtask(subtask1);
+        manager.updateSubtask(subtask2);
+        System.out.println("epic1 status after all subtasks done " + manager.getEpicByID(epic.getTaskID()).getStatus());
+
+        //И, наконец, попробуйте удалить одну из задач и один из эпиков
+        System.out.println("deleting task1.... ");
+        manager.eraseTaskByID(task.getTaskID());
+        System.out.println(manager.getAllTask());
+
+        System.out.println("deleting epic1.... ");
+        manager.eraseEpicByID(epic.getTaskID());
+        System.out.println(manager.getAllEpic());
+
+
     }
 }

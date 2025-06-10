@@ -23,6 +23,7 @@ public class TaskManager {
 
     public void addEpic(Epic epic){
         epic.setTaskID(countID++);
+        epic.setStatus(getEpicStatus(epic.getTaskID()));
         epics.put(epic.getTaskID(),epic);
     }
 
