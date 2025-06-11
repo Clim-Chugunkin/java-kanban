@@ -4,17 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TaskManager {
-    private HashMap<Integer, Task> tasks;
-    private HashMap<Integer, Epic> epics;
-    private HashMap<Integer, Subtask> subtasks;
-    private int countID;
+    private final HashMap<Integer, Task> tasks = new HashMap<>();
+    private final HashMap<Integer, Epic> epics = new HashMap<>();;
+    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();;
+    private int countID = 1;
 
-    public TaskManager(){
-        tasks = new HashMap<>();
-        epics = new HashMap<>();
-        subtasks = new HashMap<>();
-        countID = 1;
-    }
 //методы для  создания задачи, епика, подзадачи  (пункт 2.d)
     public void addTask(Task task){
         task.setTaskID(countID++);
@@ -56,7 +50,13 @@ public class TaskManager {
     }
 
     public void clearSubtask(){
+
         subtasks.clear();
+        //updating all epics
+        //если у эпика нет подзадач или все они имеют статус NEW, то статус должен быть NEW.
+        for (Epic epic : epics.values()){
+            epic.setStatus(Status.NEW);
+        }
     }
 
     //методы для  получения по идентификатору   (пункт 2.c)
@@ -98,7 +98,9 @@ public class TaskManager {
     }
 
     public void eraseSubtaskByID(int id){
+        int epicID = subtasks.get(id).getEpicID();
         subtasks.remove(id);
+        epics.get(epicID).setStatus(getEpicStatus(epicID));
     }
     //получение списка задач епика 3.a
     public ArrayList<Subtask> getAllEpicSubtask(int epicID){
@@ -124,7 +126,8 @@ public class TaskManager {
                 }
             }
         }
-        if (statusNew == count) return Status.NEW;
+        // if all subtask has status new or epic is empty => epic status is new
+        if ((statusNew == count) || count == 0 ) return Status.NEW;
         if (statusDone == count) return Status.DONE;
         return Status.IN_PROGRESS;
     }
