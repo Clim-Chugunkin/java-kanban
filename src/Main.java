@@ -3,7 +3,7 @@ import task.*;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager manager = new TaskManager();
+        TaskManager manager = Managers.getDefault();
         //Создайте две задачи, а также эпик с двумя подзадачами и  эпик с одной подзадачей.
         Task task = new Task("task1 name", "task1 description", Status.NEW);
         manager.addTask(task);

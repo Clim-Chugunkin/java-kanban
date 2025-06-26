@@ -1,16 +1,17 @@
 import task.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public interface TaskManager {
 
     //методы для  создания задачи, епика, подзадачи  (пункт 2.d)
-    void addTask(Task task);
+    int addTask(Task task);
 
-    void addEpic(Epic epic);
+    int addEpic(Epic epic);
 
-    void addSubTask(Subtask subtask);
+    int addSubTask(Subtask subtask);
 
     //методы для  получения всех задач   (пункт 2.a)
     ArrayList<Task> getAllTask();
@@ -50,5 +51,5 @@ public interface TaskManager {
     //получение списка задач епика 3.a
     ArrayList<Subtask> getAllEpicSubtask(int epicID);
 
-    ArrayList<Task> getHistory();
+    List<Task> getHistory();
 }

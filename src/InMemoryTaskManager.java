@@ -5,36 +5,44 @@ import task.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
+
+
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
-    ;
+
     private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    ;
+
+    HistoryManager history = new InMemoryHistoryManager();
     private int countID = 1;
+
 
     @Override
     //методы для  создания задачи, епика, подзадачи  (пункт 2.d)
-    public void addTask(Task task) {
-        task.setTaskID(countID++);
+    public int addTask(Task task) {
+        task.setTaskID(countID);
         tasks.put(task.getTaskID(), task);
+        return countID++;
     }
 
     @Override
-    public void addEpic(Epic epic) {
-        epic.setTaskID(countID++);
+    public int addEpic(Epic epic) {
+        epic.setTaskID(countID);
         epic.setStatus(getEpicStatus(epic.getTaskID()));
         epics.put(epic.getTaskID(), epic);
+        return countID++;
     }
 
     @Override
-    public void addSubTask(Subtask subtask) {
-        subtask.setTaskID(countID++);
+    public int addSubTask(Subtask subtask) {
+        subtask.setTaskID(countID);
         subtasks.put(subtask.getTaskID(), subtask);
         //обновляем статус епика
         int epicID = subtask.getEpicID();
         epics.get(epicID).setStatus(getEpicStatus(epicID));
+        return countID++;
     }
 
     //методы для  получения всех задач   (пункт 2.a)
@@ -78,17 +86,18 @@ public class InMemoryTaskManager implements TaskManager {
     //методы для  получения по идентификатору   (пункт 2.c)
     @Override
     public Task getTaskByID(int id) {
-        return tasks.get(id);
+        return history.addTask(tasks.get(id));
     }
 
     @Override
     public Epic getEpicByID(int id) {
-        return epics.get(id);
+        return (Epic) history.addTask(epics.get(id));
+
     }
 
     @Override
     public Subtask getSubtaskByID(int id) {
-        return subtasks.get(id);
+        return (Subtask) history.addTask(subtasks.get(id));
     }
 
     //методы для  обновления  (пункт 2.e)
@@ -138,6 +147,11 @@ public class InMemoryTaskManager implements TaskManager {
         return epicTasks;
     }
 
+    @Override
+    public List<Task> getHistory() {
+        return history.getHistory();
+    }
+
     private Status getEpicStatus(int epicID) {
         int statusNew = 0;
         int statusDone = 0;
@@ -158,4 +172,5 @@ public class InMemoryTaskManager implements TaskManager {
         if (statusDone == count) return Status.DONE;
         return Status.IN_PROGRESS;
     }
+
 }
