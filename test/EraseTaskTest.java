@@ -1,13 +1,9 @@
-import org.junit.jupiter.api.BeforeAll;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import task.Epic;
-import task.Status;
-import task.Subtask;
+
 import task.Task;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static task.Status.NEW;
@@ -18,13 +14,13 @@ public class EraseTaskTest {
 
 
     @BeforeEach
-    void setUP(){
+    void setUP() {
         manager = Managers.getDefault();
         task = new Task("Test addNewTask", "Test addNewTask description", NEW);
     }
 
     @Test
-    void eraseOneTask(){
+    void eraseOneTask() {
         //добавляем две задачи
         int taskID = manager.addTask(task);
         Task task = manager.getTaskByID(taskID);
@@ -32,16 +28,16 @@ public class EraseTaskTest {
         manager.addTask(task2);
 
         //проверяем количество задач
-        assertEquals(2,manager.getAllTask().size());
+        assertEquals(2, manager.getAllTask().size());
 
         //удаляем одну задачу и проверяем количество задач
 
         manager.eraseTaskByID(taskID);
-        assertEquals(1,manager.getAllTask().size());
+        assertEquals(1, manager.getAllTask().size());
     }
 
     @Test
-    void eraseAllTasks(){
+    void eraseAllTasks() {
         //добавляем две задачи
         int taskID = manager.addTask(task);
         Task task = manager.getTaskByID(taskID);
@@ -52,7 +48,7 @@ public class EraseTaskTest {
 
         manager.clearTasks();
 
-        assertEquals(0,manager.getAllTask().size());
+        assertEquals(0, manager.getAllTask().size());
 
     }
 
