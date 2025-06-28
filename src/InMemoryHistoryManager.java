@@ -3,7 +3,7 @@ import task.Task;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemoryHistoryManager implements HistoryManager{
+public class InMemoryHistoryManager implements HistoryManager {
     private static final int HISTORY_DEPTH = 10;
     private final ArrayList<Task> history = new ArrayList<>(HISTORY_DEPTH);
 
@@ -11,17 +11,17 @@ public class InMemoryHistoryManager implements HistoryManager{
     @Override
     public Task addTask(Task task) {
         if (task == null) return null;
-        if (history.size() == HISTORY_DEPTH){
+        if (history.size() == HISTORY_DEPTH) {
             //смещаем все элементы влево,
             // первый перезаписываем вторым, третии четвертым итд
-            for(int i = 1; i<HISTORY_DEPTH;i++){
-                history.set(i-1,history.get(i));
+            for (int i = 1; i < HISTORY_DEPTH; i++) {
+                history.set(i - 1, history.get(i));
             }
 
             //добавляем в конец новую задачу
-            history.set(HISTORY_DEPTH-1,task);
+            history.set(HISTORY_DEPTH - 1, task);
 
-        }else{
+        } else {
             history.addLast(task);
         }
         return task;
