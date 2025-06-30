@@ -1,3 +1,5 @@
+package manager;
+
 import task.Epic;
 import task.Status;
 import task.Subtask;
@@ -15,7 +17,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
 
-    HistoryManager history = Managers.getDefaultHistory();
+    private final HistoryManager history = Managers.getDefaultHistory();
     private int countID = 1;
 
 
@@ -30,8 +32,8 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public int addEpic(Epic epic) {
         epic.setTaskID(countID);
-        epic.setStatus(getEpicStatus(epic.getTaskID()));
         epics.put(epic.getTaskID(), epic);
+        updateEpicStatus(epic.getTaskID());
         return countID++;
     }
 
@@ -41,7 +43,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.put(subtask.getTaskID(), subtask);
         //обновляем статус епика
         int epicID = subtask.getEpicID();
-        epics.get(epicID).setStatus(getEpicStatus(epicID));
+        updateEpicStatus(epicID);
         return countID++;
     }
 
@@ -116,7 +118,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.put(subtask.getTaskID(), subtask);
         //обновляем статус епика
         int epicID = subtask.getEpicID();
-        epics.get(epicID).setStatus(getEpicStatus(epicID));
+        updateEpicStatus(epicID);
     }
 
     //методы для  удаления по идентификатору  (пункт 2.e)
@@ -134,7 +136,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void eraseSubtaskByID(int id) {
         int epicID = subtasks.get(id).getEpicID();
         subtasks.remove(id);
-        epics.get(epicID).setStatus(getEpicStatus(epicID));
+        updateEpicStatus(epicID);
     }
 
     //получение списка задач епика 3.a
@@ -152,7 +154,7 @@ public class InMemoryTaskManager implements TaskManager {
         return history.getHistory();
     }
 
-    private Status getEpicStatus(int epicID) {
+    private void updateEpicStatus(int epicID) {
         int statusNew = 0;
         int statusDone = 0;
         int count = 0;
@@ -168,9 +170,12 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
         // if all subtask has status new or epic is empty => epic status is new
-        if ((statusNew == count) || count == 0) return Status.NEW;
-        if (statusDone == count) return Status.DONE;
-        return Status.IN_PROGRESS;
+        Status status = Status.IN_PROGRESS;
+
+        if (((statusNew == count) || count == 0)) status = Status.NEW;
+        else if ((statusDone == count)) status = Status.DONE;
+
+        epics.get(epicID).setStatus(status);
     }
 
 }

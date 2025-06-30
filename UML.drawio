@@ -58,7 +58,7 @@
             <mxPoint x="316" y="312.00199999999995" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="vc7DCPAuvsaAZxI3sI26-28" value="InMemoryTaskManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="vc7DCPAuvsaAZxI3sI26-28" value="manager.InMemoryTaskManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="620" y="280" width="300" height="424" as="geometry" />
         </mxCell>
         <mxCell id="vc7DCPAuvsaAZxI3sI26-29" value="&amp;nbsp;- tasks : HashMap&amp;lt;int, Task&amp;gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vc7DCPAuvsaAZxI3sI26-28" vertex="1">
@@ -73,7 +73,7 @@
         <mxCell id="vc7DCPAuvsaAZxI3sI26-31" value="- countID = 1;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="vc7DCPAuvsaAZxI3sI26-28" vertex="1">
           <mxGeometry y="104" width="300" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="8n6cmwBo76hkK8oJ-rvh-26" value="- history : HistoryManager;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="vc7DCPAuvsaAZxI3sI26-28">
+        <mxCell id="8n6cmwBo76hkK8oJ-rvh-26" value="- history : manager.HistoryManager;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="vc7DCPAuvsaAZxI3sI26-28">
           <mxGeometry y="130" width="300" height="26" as="geometry" />
         </mxCell>
         <mxCell id="vc7DCPAuvsaAZxI3sI26-33" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="vc7DCPAuvsaAZxI3sI26-28" vertex="1">
@@ -130,7 +130,7 @@
             <mxPoint x="320" y="314.0039999999999" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="8n6cmwBo76hkK8oJ-rvh-17" value="«interface»&lt;br&gt;&lt;b&gt;TaskManager&lt;/b&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+        <mxCell id="8n6cmwBo76hkK8oJ-rvh-17" value="«interface»&lt;br&gt;&lt;b&gt;manager.TaskManager&lt;/b&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
           <mxGeometry x="630" y="80" width="280" height="50" as="geometry" />
         </mxCell>
         <mxCell id="8n6cmwBo76hkK8oJ-rvh-18" value="" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="vc7DCPAuvsaAZxI3sI26-28" target="8n6cmwBo76hkK8oJ-rvh-17">
@@ -139,7 +139,7 @@
             <mxPoint x="660" y="420" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="8n6cmwBo76hkK8oJ-rvh-19" value="«interface»&lt;br&gt;&lt;b&gt;HistoryManager&lt;/b&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+        <mxCell id="8n6cmwBo76hkK8oJ-rvh-19" value="«interface»&lt;br&gt;&lt;b&gt;manager.HistoryManager&lt;/b&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
           <mxGeometry x="160" y="440" width="200" height="50" as="geometry" />
         </mxCell>
         <mxCell id="8n6cmwBo76hkK8oJ-rvh-20" value="InMemmoryHistoryManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
@@ -281,7 +281,7 @@
         <mxCell id="sJIy4YBfdDKy6YUPeMB5-19" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="480" y="610" width="300" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="sJIy4YBfdDKy6YUPeMB5-20" value="проверка создания классов TaskManager и historyManager" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="sJIy4YBfdDKy6YUPeMB5-20" value="проверка создания классов manager.TaskManager и historyManager" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="495" y="640" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="sJIy4YBfdDKy6YUPeMB5-21" value="checkClassInstance()" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
