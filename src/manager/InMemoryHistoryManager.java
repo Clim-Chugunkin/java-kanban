@@ -9,34 +9,34 @@ import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private static final int HISTORY_DEPTH = 10;
-    private final Map<Integer,Node<Task>> history = new HashMap<>();
+    private final Map<Integer, Node<Task>> history = new HashMap<>();
     private Node<Task> tail;
     private Node<Task> head;
     private int size = 0;
 
     @Override
-    public Task addTask(Task task){
+    public Task addTask(Task task) {
         //если в истории уже есть  задача task
-        if (history.containsKey(task.getTaskID())){
+        if (history.containsKey(task.getTaskID())) {
             //удаляем задачу из св_списка
             removeNode(history.get(task.getTaskID()));
         }
 
         // добавляем задачу в св_список
         // и обновляем _history
-        history.put(task.getTaskID(),linkLast(task));
+        history.put(task.getTaskID(), linkLast(task));
         return task;
     }
 
 
     @Override
     public void remove(int id) {
-       //если история содержит удаляемую задачу
-       if (history.containsKey(id)){
-           //удаляем из списка
-           removeNode(history.get(id));
-           //удаляем из таблицы
-           history.remove(id);
+        //если история содержит удаляемую задачу
+        if (history.containsKey(id)) {
+            //удаляем из списка
+            removeNode(history.get(id));
+            //удаляем из таблицы
+            history.remove(id);
         }
     }
 
@@ -59,17 +59,17 @@ public class InMemoryHistoryManager implements HistoryManager {
         return newNode;
     }
 
-    public List<Task> getTasks(){
+    public List<Task> getTasks() {
         List<Task> tasks = new ArrayList<>();
         Node<Task> next = head;
-        while(next != null){
+        while (next != null) {
             tasks.add(next.getData());
             next = next.getNext();
         }
         return tasks;
     }
 
-    public void removeNode(Node<Task> delNode){
+    public void removeNode(Node<Task> delNode) {
         if (delNode != head) delNode.getPrev().setNext(delNode.getNext());
         else head = head.getNext();
 
