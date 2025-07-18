@@ -5,9 +5,7 @@ import task.Status;
 import task.Subtask;
 import task.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -66,17 +64,24 @@ public class InMemoryTaskManager implements TaskManager {
     //методы для  удаления всех задач   (пункт 2.b)
     @Override
     public void clearTasks() {
+        //удаляем все задачи из истории
+        for (Task task : tasks.values())
+            history.remove(task.getTaskID());
         tasks.clear();
     }
 
     @Override
     public void clearEpics() {
+
+        for (Epic epic : epics.values())
+            history.remove(epic.getTaskID());
         epics.clear();
     }
 
     @Override
     public void clearSubtask() {
-
+        for (Subtask subtask : subtasks.values())
+            history.remove(subtask.getTaskID());
         subtasks.clear();
         //updating all epics
         //если у эпика нет подзадач или все они имеют статус NEW, то статус должен быть NEW.
@@ -124,12 +129,30 @@ public class InMemoryTaskManager implements TaskManager {
     //методы для  удаления по идентификатору  (пункт 2.e)
     @Override
     public void eraseTaskByID(int id) {
+
         tasks.remove(id);
+        history.remove(id);
     }
 
     @Override
     public void eraseEpicByID(int id) {
+        //перед удалением эпика
+        //удаляем его подзадачи из subtasks
+        //и истории
+
+        //для перебора subtasks и удаление нужных элементов
+        //используем итереатор
+
+        Iterator<Subtask> iterator = subtasks.values().iterator();
+        Subtask subtask;
+        while (iterator.hasNext()){
+            subtask = iterator.next();
+            if (subtask.getTaskID() == id) iterator.remove();
+            history.remove(subtask.getTaskID());
+        }
+
         epics.remove(id);
+        history.remove(id);
     }
 
     @Override
@@ -137,6 +160,7 @@ public class InMemoryTaskManager implements TaskManager {
         int epicID = subtasks.get(id).getEpicID();
         subtasks.remove(id);
         updateEpicStatus(epicID);
+        history.remove(id);
     }
 
     //получение списка задач епика 3.a
