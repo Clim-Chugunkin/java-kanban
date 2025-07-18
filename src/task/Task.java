@@ -8,8 +8,8 @@ public class Task {
     private int taskID;
     private Status status;
 
-    public Task(int ID) {
-        taskID = ID;
+    public Task(int id) {
+        taskID = id;
     }
 
     public Task(String name, String description, Status status) {
