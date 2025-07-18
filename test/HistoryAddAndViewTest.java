@@ -113,7 +113,6 @@ public class HistoryAddAndViewTest {
         manager.addTask(task2);
 
 
-
         //эпик с тремя подзадачами
         Epic epic = new Epic("epic1 name", "epic1 description", Status.NEW);
         manager.addEpic(epic);
@@ -135,7 +134,7 @@ public class HistoryAddAndViewTest {
 
         //Запросите созданные задачи несколько раз в разном порядке.
         //После каждого запроса выведите историю и убедитесь, что в ней нет повторов
-        int[] correct = {2, 3, 4, 5,1};
+        int[] correct = {2, 3, 4, 5, 1};
         manager.getTaskByID(task.getTaskID());
         manager.getTaskByID(task2.getTaskID());
         manager.getEpicByID(epic.getTaskID());

@@ -145,7 +145,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         Iterator<Subtask> iterator = subtasks.values().iterator();
         Subtask subtask;
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             subtask = iterator.next();
             if (subtask.getTaskID() == id) iterator.remove();
             history.remove(subtask.getTaskID());

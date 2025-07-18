@@ -1,11 +1,11 @@
 package manager;
 
 public class Node<T> {
-    private  Node<T> prev;
-    private  Node<T> next;
+    private Node<T> prev;
+    private Node<T> next;
     T data;
 
-    public Node(Node<T> prev, T data, Node<T> next){
+    public Node(Node<T> prev, T data, Node<T> next) {
         this.prev = prev;
         this.next = next;
         this.data = data;
@@ -19,11 +19,11 @@ public class Node<T> {
         return next;
     }
 
-    public void setNext(Node<T> next){
-        this.next =next;
+    public void setNext(Node<T> next) {
+        this.next = next;
     }
 
-    public void setPrev(Node<T> prev){
+    public void setPrev(Node<T> prev) {
         this.prev = prev;
     }
 
