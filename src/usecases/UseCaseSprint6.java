@@ -52,14 +52,14 @@ public class UseCaseSprint6 implements UseCase {
         manager.getSubtaskByID(subtask1.getTaskID());
         manager.getSubtaskByID(subtask2.getTaskID());
         manager.getTaskByID(task.getTaskID());
-        for (Task _task : manager.getHistory())
-            System.out.println(_task);
+        for (Task job : manager.getHistory())
+            System.out.println(job);
 
         //Удалите задачу, которая есть в истории, и проверьте, что при печати она не будет выводиться.
         System.out.println("Удалите задачу, которая есть в истории");
         manager.eraseTaskByID(task.getTaskID());
-        for (Task _task : manager.getHistory())
-            System.out.println(_task);
+        for (Task job : manager.getHistory())
+            System.out.println(job);
 
         //Удалите эпик с тремя подзадачами и убедитесь, что из истории удалился как сам эпик, так и все его подзадачи
         System.out.println("Удалием эпик с тремя подзадачами");
