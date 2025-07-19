@@ -1,11 +1,6 @@
-import manager.Managers;
-import manager.TaskManager;
-import task.*;
 import usecases.UseCase;
 import usecases.UseCaseOne;
 import usecases.UseCaseSprint6;
-
-import static task.Status.NEW;
 
 public class Main {
 
