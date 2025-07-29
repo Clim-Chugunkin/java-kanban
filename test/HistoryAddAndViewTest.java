@@ -1,5 +1,4 @@
-import manager.Managers;
-import manager.TaskManager;
+import manager.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import task.Epic;
@@ -37,10 +36,8 @@ public class HistoryAddAndViewTest {
         manager.addSubTask(subtask1);
         manager.addSubTask(subtask2);
 
-
-        //моделируем историю просмотров
-        //записываем 5 элементов в истроию
-        int[] correct = {1, 1, 2, 3, 4};
+        //добавляем в историю задачи по очереди
+        int[] correct = {1, 2, 3, 4};
         manager.getTaskByID(task.getTaskID());
         manager.getTaskByID(task.getTaskID());
         manager.getEpicByID(epic.getTaskID());
@@ -49,28 +46,29 @@ public class HistoryAddAndViewTest {
         assertArrayEquals(correct, getIDArray());
 
 
-        //записываем еще 5 элементов в истроию
-        //граничное значение
-        int[] correct2 = {1, 1, 2, 3, 4, 1, 1, 2, 3, 4};
+        int[] correct2 = {2, 3, 4, 1};
         manager.getTaskByID(task.getTaskID());
-        manager.getTaskByID(task.getTaskID());
-        manager.getEpicByID(epic.getTaskID());
-        manager.getSubtaskByID(subtask1.getTaskID());
-        manager.getSubtaskByID(subtask2.getTaskID());
         assertArrayEquals(correct2, getIDArray());
 
-        //записываем 1 значение которе должно записаться в конец
-        // и история сдвинеться
-        int[] correct3 = {1, 2, 3, 4, 1, 1, 2, 3, 4, 1};
-        manager.getTaskByID(task.getTaskID());
+        int[] correct3 = {2, 4, 1, 3};
+        manager.getSubtaskByID(subtask1.getTaskID());
         assertArrayEquals(correct3, getIDArray());
 
-        //записываем 2 значение которе должно записаться в конец
-        // и история сдвинеться
-        int[] correct4 = {3, 4, 1, 1, 2, 3, 4, 1, 2, 3};
-        manager.getEpicByID(epic.getTaskID());
-        manager.getSubtaskByID(subtask1.getTaskID());
+
+        //удалим задачу из taskManager
+        int[] correct4 = {2, 4, 3};
+        manager.eraseTaskByID(task.getTaskID());
+
         assertArrayEquals(correct4, getIDArray());
+
+
+        //удалим epic из taskManager
+        manager.addTask(task);
+        int[] correct5 = {task.getTaskID()};
+        manager.getTaskByID(task.getTaskID());
+        manager.eraseEpicByID(epic.getTaskID());
+        assertArrayEquals(correct5, getIDArray());
+
     }
 
     private int[] getIDArray() {
@@ -81,4 +79,11 @@ public class HistoryAddAndViewTest {
         }
         return array;
     }
+
+    @Test
+    public void useCaseOne() {
+
+
+    }
+
 }
