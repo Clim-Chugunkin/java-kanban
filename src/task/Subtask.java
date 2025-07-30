@@ -1,5 +1,7 @@
 package task;
 
+import static task.TaskTypes.*;
+
 public class Subtask extends Task {
 
     private int epicID;
@@ -9,6 +11,11 @@ public class Subtask extends Task {
         this.epicID = epicID;
     }
 
+    public Subtask(String[] str) {
+        super(str);
+        epicID = Integer.parseInt(str[5]);
+    }
+
     public int getEpicID() {
         return epicID;
     }
@@ -16,4 +23,10 @@ public class Subtask extends Task {
     public void setEpicID(int epicID) {
         this.epicID = epicID;
     }
+
+    @Override
+    public String getString() {
+        return super.getString().replace(TASK.name(), SUBTASK.name()) + "," + Integer.toString(epicID);
+    }
+
 }

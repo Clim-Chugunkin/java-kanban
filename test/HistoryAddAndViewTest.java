@@ -80,10 +80,4 @@ public class HistoryAddAndViewTest {
         return array;
     }
 
-    @Test
-    public void useCaseOne() {
-
-
-    }
-
 }

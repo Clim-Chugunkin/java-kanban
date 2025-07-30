@@ -46,7 +46,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
 
-    private  Node<Task> linkLast(Task task) {
+    private Node<Task> linkLast(Task task) {
         final Node<Task> oldTail = tail;
         final Node<Task> newNode = new Node<>(tail, task, null);
         tail = newNode;
