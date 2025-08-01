@@ -56,6 +56,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
+    public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
+        FileBackedTaskManager manager = new FileBackedTaskManager(file.getPath());
+        manager.loadFromFile();
+        return manager;
+    }
+
     @Override
     public int addTask(Task task) {
         int id = super.addTask(task);
