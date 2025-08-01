@@ -10,10 +10,10 @@ import java.util.*;
 public class InMemoryTaskManager implements TaskManager {
 
 
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
+    protected final HashMap<Integer, Task> tasks = new HashMap<>();
+    protected final HashMap<Integer, Epic> epics = new HashMap<>();
 
-    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    protected final HashMap<Integer, Subtask> subtasks = new HashMap<>();
 
     private final HistoryManager history = Managers.getDefaultHistory();
     private int countID = 1;
@@ -22,27 +22,39 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     //методы для  создания задачи, епика, подзадачи  (пункт 2.d)
     public int addTask(Task task) {
-        task.setTaskID(countID);
+        if (task.getTaskID() < 0) {
+            task.setTaskID(countID++);
+        } else {
+            if (countID <= task.getTaskID()) countID = task.getTaskID() + 1;
+        }
         tasks.put(task.getTaskID(), task);
-        return countID++;
+        return task.getTaskID();
     }
 
     @Override
     public int addEpic(Epic epic) {
-        epic.setTaskID(countID);
+        if (epic.getTaskID() < 0) {
+            epic.setTaskID(countID++);
+        } else {
+            if (countID <= epic.getTaskID()) countID = epic.getTaskID() + 1;
+        }
         epics.put(epic.getTaskID(), epic);
-        updateEpicStatus(epic.getTaskID());
-        return countID++;
+        return epic.getTaskID();
     }
 
     @Override
     public int addSubTask(Subtask subtask) {
-        subtask.setTaskID(countID);
+        if (subtask.getTaskID() < 0) {
+            subtask.setTaskID(countID++);
+        } else {
+            if (countID <= subtask.getTaskID()) countID = subtask.getTaskID() + 1;
+        }
         subtasks.put(subtask.getTaskID(), subtask);
+
         //обновляем статус епика
         int epicID = subtask.getEpicID();
         updateEpicStatus(epicID);
-        return countID++;
+        return subtask.getTaskID();
     }
 
     //методы для  получения всех задач   (пункт 2.a)

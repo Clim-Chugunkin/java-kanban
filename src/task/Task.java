@@ -2,11 +2,20 @@ package task;
 
 import java.util.Objects;
 
+import static task.TaskTypes.*;
+
 public class Task {
     private String name;
     private String description;
-    private int taskID;
+    private int taskID = -1;
     private Status status;
+
+    public Task(String[] str) {
+        taskID = Integer.parseInt(str[0]);
+        name = str[2];
+        status = Status.valueOf(str[3]);
+        description = str[4];
+    }
 
     public Task(int id) {
         taskID = id;
@@ -15,6 +24,13 @@ public class Task {
     public Task(String name, String description, Status status) {
         this.name = name;
         this.description = description;
+        this.status = status;
+    }
+
+    public Task(String name, String description, int taskID, Status status) {
+        this.name = name;
+        this.description = description;
+        this.taskID = taskID;
         this.status = status;
     }
 
@@ -52,12 +68,19 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return this.getClass().getSimpleName() + "{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", taskID=" + taskID +
                 ", status=" + status +
                 '}';
+    }
+
+    //Напишите метод сохранения задачи в строку
+    public String getString() {
+        String[] fields = {Integer.toString(taskID),
+                TASK.name(), name, status.name(), description,};
+        return String.join(",", fields);
     }
 
     @Override
