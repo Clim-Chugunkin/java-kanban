@@ -2,6 +2,8 @@ package usecases;
 
 import manager.FileBackedTaskManager;
 import manager.ManagerSaveException;
+import manager.Managers;
+import manager.TaskManager;
 import task.Epic;
 import task.Status;
 import task.Subtask;
@@ -20,14 +22,19 @@ public class UseCaseSprint7 implements UseCase {
     @Override
     public void go() {
         String fileName = "";
+        File file = null;
+        FileBackedTaskManager manager = null;
         try {
-            File f = File.createTempFile("out", ".txt");
-            fileName = f.getName();
+            file = File.createTempFile("out", ".txt");
+            //fileName = f.getName();
+            manager = FileBackedTaskManager.loadFromFile(file);
         } catch (IOException ex) {
             System.out.println("Фаил не может быть создан");
+        } catch (ManagerSaveException e) {
+            throw new RuntimeException(e);
         }
 
-        FileBackedTaskManager manager = new FileBackedTaskManager(fileName);
+
         //Заведите несколько разных задач, эпиков и подзадач.
         Task task = new Task("task1 name", "task1 description", Status.NEW);
         manager.addTask(task);
@@ -46,14 +53,13 @@ public class UseCaseSprint7 implements UseCase {
         manager.addEpic(epic2);
         Subtask subtask3 = new Subtask("subtask1 epic2 name", "subtask1 epic2 description", Status.IN_PROGRESS, epic2.getTaskID());
         manager.addSubTask(subtask3);
+        FileBackedTaskManager manager2 = null;
+        try{
+            manager2 = FileBackedTaskManager.loadFromFile(file);
+        }catch(ManagerSaveException ex){
 
-        FileBackedTaskManager manager2 = new FileBackedTaskManager(fileName);
-        try {
-            manager2.loadFromFile();
-        } catch (ManagerSaveException e) {
-            System.out.println(e.getMessage());
-            ;
         }
+
         List<Task> oldTasks = manager.getAllTask();
         List<Task> newTasks = manager2.getAllTask();
         if (oldTasks.size() != newTasks.size()) System.out.println("задачи отличаются");

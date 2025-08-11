@@ -6,6 +6,7 @@ import task.Task;
 import task.TaskTypes;
 
 import java.io.*;
+import java.nio.file.Files;
 
 import static task.TaskTypes.TASK;
 
@@ -36,29 +37,28 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     }
 
-    public void loadFromFile() throws ManagerSaveException {
-        //открываем фаил для ятения
-        try (BufferedReader fileReader = new BufferedReader(new FileReader(fileName))) {
-            String[] stringToParse;
-            while (fileReader.ready()) {
-                stringToParse = fileReader.readLine().split(",");
-                switch (TaskTypes.valueOf(stringToParse[1])) {
-                    case TASK -> super.addTask(new Task(stringToParse));
-
-                    case EPIC -> super.addEpic(new Epic(stringToParse));
-
-                    case SUBTASK -> super.addSubTask(new Subtask(stringToParse));
-                }
-            }
-
-        } catch (IOException ex) {
-            throw new ManagerSaveException("Произошла ошибка во время чтения файла.");
-        }
-    }
-
     public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
         FileBackedTaskManager manager = new FileBackedTaskManager(file.getPath());
-        manager.loadFromFile();
+        try{
+            String content = Files.readString(file.toPath());
+            if (content.isEmpty()) return manager;
+            String [] parts = content.split("\n\n");
+            String []taskLines = parts[0].split("\n");
+            String[] stringToParse;
+
+            for (int i = 0; i<taskLines.length;i++){
+                stringToParse = taskLines[i].split(",");
+                switch (TaskTypes.valueOf(stringToParse[1])) {
+                    case TASK -> manager.addTask(new Task(stringToParse));
+
+                    case EPIC -> manager.addEpic(new Epic(stringToParse));
+
+                    case SUBTASK -> manager.addSubTask(new Subtask(stringToParse));
+                }
+            }
+        }catch (IOException ex){
+            throw new ManagerSaveException("Произошла ошибка во время чтения файла.");
+        }
         return manager;
     }
 
