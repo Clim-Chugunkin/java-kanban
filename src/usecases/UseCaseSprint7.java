@@ -2,8 +2,6 @@ package usecases;
 
 import manager.FileBackedTaskManager;
 import manager.ManagerSaveException;
-import manager.Managers;
-import manager.TaskManager;
 import task.Epic;
 import task.Status;
 import task.Subtask;
@@ -57,7 +55,7 @@ public class UseCaseSprint7 implements UseCase {
         try {
             manager2 = FileBackedTaskManager.loadFromFile(file);
         } catch (ManagerSaveException ex) {
-
+            System.out.println(ex);
         }
 
         List<Task> oldTasks = manager.getAllTask();
