@@ -39,14 +39,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
         FileBackedTaskManager manager = new FileBackedTaskManager(file.getPath());
-        try{
+        try {
             String content = Files.readString(file.toPath());
             if (content.isEmpty()) return manager;
-            String [] parts = content.split("\n\n");
-            String []taskLines = parts[0].split("\n");
+            String[] parts = content.split("\n\n");
+            String[] taskLines = parts[0].split("\n");
             String[] stringToParse;
 
-            for (int i = 0; i<taskLines.length;i++){
+            for (int i = 0; i < taskLines.length; i++) {
                 stringToParse = taskLines[i].split(",");
                 switch (TaskTypes.valueOf(stringToParse[1])) {
                     case TASK -> manager.addTask(new Task(stringToParse));
@@ -56,7 +56,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     case SUBTASK -> manager.addSubTask(new Subtask(stringToParse));
                 }
             }
-        }catch (IOException ex){
+        } catch (IOException ex) {
             throw new ManagerSaveException("Произошла ошибка во время чтения файла.");
         }
         return manager;

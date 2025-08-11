@@ -54,9 +54,9 @@ public class UseCaseSprint7 implements UseCase {
         Subtask subtask3 = new Subtask("subtask1 epic2 name", "subtask1 epic2 description", Status.IN_PROGRESS, epic2.getTaskID());
         manager.addSubTask(subtask3);
         FileBackedTaskManager manager2 = null;
-        try{
+        try {
             manager2 = FileBackedTaskManager.loadFromFile(file);
-        }catch(ManagerSaveException ex){
+        } catch (ManagerSaveException ex) {
 
         }
 
