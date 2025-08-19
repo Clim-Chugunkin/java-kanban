@@ -1,3 +1,4 @@
+import manager.IntersectedTaskException;
 import manager.Managers;
 import manager.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,12 +16,12 @@ public class AddAndViewTaskTest {
 
     @BeforeEach
     void setUP() {
-        manager = Managers.getDefault();
+        manager = Managers.getInMemoryTaskManager();
         task = new Task("Test addNewTask", "Test addNewTask description", NEW);
     }
 
     @Test
-    void AddNewTaskTest() {
+    void AddNewTaskTest() throws IntersectedTaskException {
 
         final int taskID = manager.addTask(task);
 
@@ -37,17 +38,17 @@ public class AddAndViewTaskTest {
     }
 
     @Test
-    void viewTask() {
+    void viewTask() throws IntersectedTaskException {
         int taskID = manager.addTask(task);
         Task task = manager.getTaskByID(taskID);
 
-        String taskView = "Task{name='Test addNewTask', description='Test addNewTask description', taskID=1, status=NEW}";
+        String taskView = "Task{name='Test addNewTask', description='Test addNewTask description', taskID=1, status=NEW, startTime =null, duration = null}";
         assertEquals(taskView, task.toString(), "Неправильный вывод задачи");
     }
 
     //тест на проверку неизменности данных задачи
     @Test
-    void checkTaskImmutability() {
+    void checkTaskImmutability() throws IntersectedTaskException {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         final int taskId = manager.addTask(task);
         Task savedTask = manager.getTaskByID(taskId);

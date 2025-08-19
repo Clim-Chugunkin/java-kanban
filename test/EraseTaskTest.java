@@ -1,9 +1,8 @@
-
+import manager.IntersectedTaskException;
 import manager.Managers;
 import manager.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import task.Task;
 
 
@@ -17,12 +16,12 @@ public class EraseTaskTest {
 
     @BeforeEach
     void setUP() {
-        manager = Managers.getDefault();
+        manager = Managers.getInMemoryTaskManager();
         task = new Task("Test addNewTask", "Test addNewTask description", NEW);
     }
 
     @Test
-    void eraseOneTask() {
+    void eraseOneTask() throws IntersectedTaskException {
         //добавляем две задачи
         int taskID = manager.addTask(task);
         Task task = manager.getTaskByID(taskID);
@@ -39,7 +38,7 @@ public class EraseTaskTest {
     }
 
     @Test
-    void eraseAllTasks() {
+    void eraseAllTasks() throws IntersectedTaskException {
         //добавляем две задачи
         int taskID = manager.addTask(task);
         Task task = manager.getTaskByID(taskID);

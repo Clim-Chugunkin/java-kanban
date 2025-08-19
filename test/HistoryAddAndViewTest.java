@@ -15,12 +15,12 @@ public class HistoryAddAndViewTest {
 
     @BeforeEach
     void setUP() {
-        manager = Managers.getDefault();
+        manager = Managers.getInMemoryTaskManager();
 
     }
 
     @Test
-    void historyCheck() {
+    void historyCheck() throws IntersectedTaskException {
         //создаем и добавляем новую задачу
         Task task = new Task("Task ", "Task description", NEW);
         manager.addTask(task);

@@ -1,5 +1,5 @@
-
-import manager.Managers;
+import manager.InMemoryTaskManager;
+import manager.IntersectedTaskException;
 import manager.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ class InMemoryTaskManagerTest {
 
     @BeforeEach
     public void setUP() {
-        taskManager = Managers.getDefault();
+        taskManager = new InMemoryTaskManager();
     }
 
     //тест на проверку сохранения и сопоставления подзадач в эпике
@@ -31,8 +31,13 @@ class InMemoryTaskManagerTest {
         Subtask subtask1 = new Subtask("subtask1 epic1 name", "subtask1 epic1 description", Status.NEW, epic.getTaskID());
         Subtask subtask2 = new Subtask("subtask2 epic1 name", "subtask2 epic1 description", Status.NEW, epic.getTaskID());
 
-        int subtaskID = taskManager.addSubTask(subtask1);
-        taskManager.addSubTask(subtask2);
+        int subtaskID = 0;
+        try {
+            subtaskID = taskManager.addSubTask(subtask1);
+            taskManager.addSubTask(subtask2);
+        } catch (IntersectedTaskException e) {
+            System.out.println(e.getMessage());
+        }
 
 
         ArrayList<Subtask> subtasks = taskManager.getAllEpicSubtask(epicID);
