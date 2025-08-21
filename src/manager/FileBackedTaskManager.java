@@ -1,5 +1,7 @@
 package manager;
 
+import exceptions.IntersectedTaskException;
+import exceptions.ManagerSaveException;
 import task.Epic;
 import task.Subtask;
 import task.Task;
@@ -9,16 +11,16 @@ import java.io.*;
 import java.nio.file.Files;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private String fileName;
+    private String fileNameToSaveTasks;
 
     //Пусть новый менеджер получает файл для автосохранения в своём конструкторе и сохраняет его в поле
     public FileBackedTaskManager(String fileName) {
-        this.fileName = fileName;
+        this.fileNameToSaveTasks = fileName;
     }
 
     private void save() throws ManagerSaveException {
         //открываем поток для записи в фаил
-        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(fileName))) {
+        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(fileNameToSaveTasks))) {
             //записываем все задачи
             for (Task task : getAllTask())
                 fileWriter.write(task.getString() + "\n");
@@ -181,6 +183,4 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             System.out.println(ex.getMessage());
         }
     }
-
-
 }

@@ -1,22 +1,20 @@
 package manager;
 
+import exceptions.IntersectedTaskException;
+import exceptions.ManagerSaveException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
 public class Managers {
-    private static final String fileName = "data.txt";
 
     public static TaskManager getDefault() {
-
         try {
-            File file = new File(fileName);
-            if (!file.exists()) Files.createFile(file.toPath());
-            return FileBackedTaskManager.loadFromFile(file);
+            return FileBackedTaskManager.loadFromFile(Files.createTempFile("out", "txt").toFile());
         } catch (ManagerSaveException | IOException | IntersectedTaskException ex) {
             System.out.println(ex.getMessage());
         }
-
         return null;
     }
 
@@ -26,5 +24,9 @@ public class Managers {
 
     public static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
+    }
+
+    public static TaskManager getFileBackedTaskManager(File file) throws ManagerSaveException, IntersectedTaskException {
+        return FileBackedTaskManager.loadFromFile(file);
     }
 }

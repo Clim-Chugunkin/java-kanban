@@ -12,10 +12,7 @@ public class ManagerTest {
     void checkClassInstance() {
         TaskManager manager = Managers.getDefault();
         HistoryManager hManager = Managers.getDefaultHistory();
-
         assertNotNull(manager);
         assertNotNull(hManager);
     }
-
-
 }

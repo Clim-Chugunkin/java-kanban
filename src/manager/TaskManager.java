@@ -1,5 +1,6 @@
 package manager;
 
+import exceptions.IntersectedTaskException;
 import task.*;
 
 import java.util.ArrayList;
@@ -8,7 +9,6 @@ import java.util.Set;
 
 
 public interface TaskManager {
-
     //методы для  создания задачи, епика, подзадачи  (пункт 2.d)
     int addTask(Task task) throws IntersectedTaskException;
 

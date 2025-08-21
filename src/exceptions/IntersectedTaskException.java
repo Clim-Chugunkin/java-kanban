@@ -1,4 +1,4 @@
-package manager;
+package exceptions;
 
 public class IntersectedTaskException extends Exception {
     public IntersectedTaskException() {

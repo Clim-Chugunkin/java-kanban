@@ -1,5 +1,6 @@
 package manager;
 
+import exceptions.IntersectedTaskException;
 import task.Epic;
 import task.Status;
 import task.Subtask;
@@ -12,13 +13,9 @@ import java.util.Comparator;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-
-
     protected final HashMap<Integer, Task> tasks = new HashMap<>();
     protected final HashMap<Integer, Epic> epics = new HashMap<>();
-
     protected final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-
     private final HistoryManager history = Managers.getDefaultHistory();
     protected final TreeSet<Task> sortedList = new TreeSet<>();
     private int countID = 1;
@@ -92,7 +89,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearEpics() {
-
         for (Epic epic : epics.values())
             history.remove(epic.getTaskID());
         epics.clear();
@@ -151,7 +147,6 @@ public class InMemoryTaskManager implements TaskManager {
     //методы для  удаления по идентификатору  (пункт 2.e)
     @Override
     public void eraseTaskByID(int id) {
-
         tasks.remove(id);
         history.remove(id);
     }
@@ -172,7 +167,6 @@ public class InMemoryTaskManager implements TaskManager {
             if (subtask.getTaskID() == id) iterator.remove();
             history.remove(subtask.getTaskID());
         }
-
         epics.remove(id);
         history.remove(id);
     }
@@ -221,41 +215,48 @@ public class InMemoryTaskManager implements TaskManager {
         else if ((statusDone == count)) status = Status.DONE;
         Epic epic = epics.get(epicID);
         epic.setStatus(status);
+        estimateEpicStart(epic);
+        estimateEpicDuration(epic);
+    }
 
-
+    private void estimateEpicStart(Epic epic) {
         subtasks.values().stream()
-                .filter((subtask) -> (subtask.getEpicID() == epicID) && (subtask.getStartTime() != null))
+                .filter((subtask) -> (subtask.getEpicID() == epic.getTaskID()) && (subtask.getStartTime() != null))
                 .min(Comparator.comparing(Task::getStartTime))
                 .map(Task::getStartTime)
                 .ifPresent(epic::setStartTime);
+    }
 
-
+    private void estimateEpicDuration(Epic epic) {
         long epicDuration =
                 subtasks.values().stream()
-                        .filter((subtask) -> (subtask.getEpicID() == epicID) && (subtask.getDuration() != null))
+                        .filter((subtask) -> (subtask.getEpicID() == epic.getTaskID()) && (subtask.getDuration() != null))
                         .map(Task::getDuration)
                         .map(Duration::toMillis)
                         .reduce(0L, Long::sum);
         epic.setDuration(Duration.ofMillis(epicDuration));
     }
+    // ? Это лишь один из кейсов пересечения, нужно проверить все
+    //  - У меня немного другое решение
+//    в твоем примере (комментарии в GitHub) ты находишь пересечение
+//    используя только начальное время отрезков start1,start2 , при этом
+//    условие для проверки на пересечение получается немного громоздким
+//    Я рассчитываю начальное и конечное время отрезка и получается что в условие
+//    для расчета пересечение получается компактнее
+//    в тестах есть проверка пересечения (в моей реализации) все работает
 
     public boolean isIntercepted(Task task1, Task task2) {
         if ((task1.getStartTime() == null) || (task2.getStartTime() == null)) return false;
-
         LocalDateTime timeAStart = task1.getStartTime();
         LocalDateTime timeAStop = timeAStart.plus(task1.getDuration());
-
         LocalDateTime timeBStart = task2.getStartTime();
         LocalDateTime timeBStop = timeBStart.plus(task2.getDuration());
-
         return timeAStart.isBefore(timeBStop) && (timeAStop.isAfter(timeBStart));
-
-
     }
 
-    public boolean checkTaskInterception(Task task) {
+    public boolean checkTaskInterception(Task newTask) {
         return sortedList.stream()
-                .anyMatch(_task -> isIntercepted(task, _task));
+                .anyMatch(task -> isIntercepted(newTask, task));
     }
 
     @Override

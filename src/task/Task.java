@@ -20,7 +20,6 @@ public class Task implements Comparable<Task> {
         name = str[2];
         status = Status.valueOf(str[3]);
         description = str[4];
-
         startTime = (!str[5].equals("0")) ? LocalDateTime.parse(str[5]) : null;
         duration = (!str[6].equals("0")) ? Duration.parse(str[6]) : null;
     }

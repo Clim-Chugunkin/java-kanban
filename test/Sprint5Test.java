@@ -1,20 +1,16 @@
-package usecases;
-
-import manager.IntersectedTaskException;
-import manager.Managers;
-import manager.TaskManager;
+import exceptions.IntersectedTaskException;
+import manager.*;
+import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.Status;
 import task.Subtask;
 import task.Task;
 
-public class UseCaseOne implements UseCase {
+public class Sprint5Test {
 
-    public String getName() {
-        return "UseCaseOne";
-    }
 
-    public void go() {
+    @Test
+    public void sprint5Test() {
         TaskManager manager = Managers.getDefault();
         //Создайте две задачи, а также эпик с двумя подзадачами и  эпик с одной подзадачей.
         Task task = new Task("task1 name", "task1 description", Status.NEW);
@@ -25,15 +21,12 @@ public class UseCaseOne implements UseCase {
             manager.addTask(task);
             Task task2 = new Task("task2 name", "task2 description", Status.IN_PROGRESS);
             manager.addTask(task2);
-
-
             epic = new Epic("epic1 name", "epic1 description", Status.NEW);
             manager.addEpic(epic);
             subtask1 = new Subtask("subtask1 epic1 name", "subtask1 epic1 description", Status.NEW, epic.getTaskID());
             subtask2 = new Subtask("subtask2 epic1 name", "subtask2 epic1 description", Status.NEW, epic.getTaskID());
             manager.addSubTask(subtask1);
             manager.addSubTask(subtask2);
-
             Epic epic2 = new Epic("epic2 name", "epic2 description", Status.NEW);
             manager.addEpic(epic2);
             Subtask subtask3 = new Subtask("subtask1 epic2 name", "subtask1 epic2 description", Status.IN_PROGRESS, epic2.getTaskID());
@@ -41,7 +34,6 @@ public class UseCaseOne implements UseCase {
         } catch (IntersectedTaskException e) {
             System.out.println(e.getMessage());
         }
-
         //Распечатайте списки эпиков, задач и подзадач через
         System.out.println("Task list : ");
         System.out.println(manager.getAllTask());
@@ -71,15 +63,12 @@ public class UseCaseOne implements UseCase {
             System.out.println(e.getMessage());
         }
         System.out.println("epic1 status after all subtasks done " + manager.getEpicByID(epic.getTaskID()).getStatus());
-
         //И, наконец, попробуйте удалить одну из задач и один из эпиков
         System.out.println("deleting task1.... ");
         manager.eraseTaskByID(task.getTaskID());
         System.out.println(manager.getAllTask());
-
         System.out.println("deleting epic1.... ");
         manager.eraseEpicByID(epic.getTaskID());
         System.out.println(manager.getAllEpic());
-
     }
 }
