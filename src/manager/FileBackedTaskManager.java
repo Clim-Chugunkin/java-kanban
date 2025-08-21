@@ -1,5 +1,7 @@
 package manager;
 
+import exceptions.IntersectedTaskException;
+import exceptions.ManagerSaveException;
 import task.Epic;
 import task.Subtask;
 import task.Task;
@@ -8,19 +10,17 @@ import task.TaskTypes;
 import java.io.*;
 import java.nio.file.Files;
 
-import static task.TaskTypes.TASK;
-
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private String fileName;
+    private String fileNameToSaveTasks;
 
     //Пусть новый менеджер получает файл для автосохранения в своём конструкторе и сохраняет его в поле
     public FileBackedTaskManager(String fileName) {
-        this.fileName = fileName;
+        this.fileNameToSaveTasks = fileName;
     }
 
     private void save() throws ManagerSaveException {
         //открываем поток для записи в фаил
-        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(fileName))) {
+        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(fileNameToSaveTasks))) {
             //записываем все задачи
             for (Task task : getAllTask())
                 fileWriter.write(task.getString() + "\n");
@@ -34,10 +34,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         } catch (IOException ex) {
             throw new ManagerSaveException("Произошла ошибка во время записи файла.");
         }
-
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
+    public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException, IntersectedTaskException {
         FileBackedTaskManager manager = new FileBackedTaskManager(file.getPath());
         try {
             String content = Files.readString(file.toPath());
@@ -63,7 +62,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public int addTask(Task task) {
+    public int addTask(Task task) throws IntersectedTaskException {
         int id = super.addTask(task);
         try {
             save();
@@ -85,7 +84,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public int addSubTask(Subtask subtask) {
+    public int addSubTask(Subtask subtask) throws IntersectedTaskException {
         int id = super.addSubTask(subtask);
         try {
             save();
@@ -126,7 +125,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateTask(Task task) {
+    public void updateTask(Task task) throws IntersectedTaskException {
         super.updateTask(task);
         try {
             save();
@@ -146,7 +145,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
+    public void updateSubtask(Subtask subtask) throws IntersectedTaskException {
         super.updateSubtask(subtask);
         try {
             save();
@@ -184,6 +183,4 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             System.out.println(ex.getMessage());
         }
     }
-
-
 }

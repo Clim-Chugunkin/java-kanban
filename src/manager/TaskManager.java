@@ -1,19 +1,20 @@
 package manager;
 
+import exceptions.IntersectedTaskException;
 import task.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 public interface TaskManager {
-
     //методы для  создания задачи, епика, подзадачи  (пункт 2.d)
-    int addTask(Task task);
+    int addTask(Task task) throws IntersectedTaskException;
 
     int addEpic(Epic epic);
 
-    int addSubTask(Subtask subtask);
+    int addSubTask(Subtask subtask) throws IntersectedTaskException;
 
     //методы для  получения всех задач   (пункт 2.a)
     ArrayList<Task> getAllTask();
@@ -37,11 +38,11 @@ public interface TaskManager {
     Subtask getSubtaskByID(int id);
 
     //методы для  обновления  (пункт 2.e)
-    void updateTask(Task task);
+    void updateTask(Task task) throws IntersectedTaskException;
 
     void updateEpic(Epic epic);
 
-    void updateSubtask(Subtask subtask);
+    void updateSubtask(Subtask subtask) throws IntersectedTaskException;
 
     //методы для  удаления по идентификатору  (пункт 2.e)
     void eraseTaskByID(int id);
@@ -54,4 +55,6 @@ public interface TaskManager {
     ArrayList<Subtask> getAllEpicSubtask(int epicID);
 
     List<Task> getHistory();
+
+    Set<Task> getPrioritizedTasks();
 }
