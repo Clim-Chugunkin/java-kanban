@@ -3,7 +3,6 @@ package manager;
 import exceptions.IntersectedTaskException;
 import exceptions.ManagerSaveException;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
