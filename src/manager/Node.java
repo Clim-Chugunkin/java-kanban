@@ -3,7 +3,7 @@ package manager;
 public class Node<T> {
     private Node<T> prev;
     private Node<T> next;
-    T data;
+    private T data;
 
     public Node(Node<T> prev, T data, Node<T> next) {
         this.prev = prev;

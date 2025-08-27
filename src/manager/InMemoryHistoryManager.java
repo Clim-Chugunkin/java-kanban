@@ -16,6 +16,9 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public Task addTask(Task task) {
+
+        if (task == null) return null;
+
         //если в истории уже есть  задача task
         if (history.containsKey(task.getTaskID())) {
             //удаляем задачу из св_списка
@@ -27,7 +30,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         history.put(task.getTaskID(), linkLast(task));
         return task;
     }
-
 
     @Override
     public void remove(int id) {
@@ -70,10 +72,16 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private void removeNode(Node<Task> delNode) {
-        if (delNode != head) delNode.getPrev().setNext(delNode.getNext());
-        else head = head.getNext();
+        if (delNode != head) {
+            delNode.getPrev().setNext(delNode.getNext());
+        } else {
+            head = head.getNext();
+        }
 
-        if (delNode != tail) delNode.getNext().setPrev(delNode.getPrev());
-        else tail = tail.getPrev();
+        if (delNode != tail) {
+            delNode.getNext().setPrev(delNode.getPrev());
+        } else {
+            tail = tail.getPrev();
+        }
     }
 }

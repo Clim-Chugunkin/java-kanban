@@ -1,33 +1,36 @@
 package manager;
 
+import exceptions.IntersectedTaskException;
 import task.Epic;
 import task.Status;
 import task.Subtask;
 import task.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Comparator;
+
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-
-
     protected final HashMap<Integer, Task> tasks = new HashMap<>();
     protected final HashMap<Integer, Epic> epics = new HashMap<>();
-
     protected final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-
     private final HistoryManager history = Managers.getDefaultHistory();
+    protected final TreeSet<Task> sortedList = new TreeSet<>();
     private int countID = 1;
-
 
     @Override
     //методы для  создания задачи, епика, подзадачи  (пункт 2.d)
-    public int addTask(Task task) {
+    public int addTask(Task task) throws IntersectedTaskException {
+        if (checkTaskInterception(task)) throw new IntersectedTaskException();
         if (task.getTaskID() < 0) {
             task.setTaskID(countID++);
         } else {
             if (countID <= task.getTaskID()) countID = task.getTaskID() + 1;
         }
         tasks.put(task.getTaskID(), task);
+        sortedList.add(task);
         return task.getTaskID();
     }
 
@@ -43,14 +46,15 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public int addSubTask(Subtask subtask) {
+    public int addSubTask(Subtask subtask) throws IntersectedTaskException {
+        if (checkTaskInterception(subtask)) throw new IntersectedTaskException();
         if (subtask.getTaskID() < 0) {
             subtask.setTaskID(countID++);
         } else {
             if (countID <= subtask.getTaskID()) countID = subtask.getTaskID() + 1;
         }
         subtasks.put(subtask.getTaskID(), subtask);
-
+        sortedList.add(subtask);
         //обновляем статус епика
         int epicID = subtask.getEpicID();
         updateEpicStatus(epicID);
@@ -84,7 +88,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearEpics() {
-
         for (Epic epic : epics.values())
             history.remove(epic.getTaskID());
         epics.clear();
@@ -121,7 +124,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     //методы для  обновления  (пункт 2.e)
     @Override
-    public void updateTask(Task task) {
+    public void updateTask(Task task) throws IntersectedTaskException {
+        if (checkTaskInterception(task)) throw new IntersectedTaskException();
         tasks.put(task.getTaskID(), task);
     }
 
@@ -131,7 +135,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
+    public void updateSubtask(Subtask subtask) throws IntersectedTaskException {
+        if (checkTaskInterception(subtask)) throw new IntersectedTaskException();
         subtasks.put(subtask.getTaskID(), subtask);
         //обновляем статус епика
         int epicID = subtask.getEpicID();
@@ -141,7 +146,6 @@ public class InMemoryTaskManager implements TaskManager {
     //методы для  удаления по идентификатору  (пункт 2.e)
     @Override
     public void eraseTaskByID(int id) {
-
         tasks.remove(id);
         history.remove(id);
     }
@@ -162,7 +166,6 @@ public class InMemoryTaskManager implements TaskManager {
             if (subtask.getTaskID() == id) iterator.remove();
             history.remove(subtask.getTaskID());
         }
-
         epics.remove(id);
         history.remove(id);
     }
@@ -207,11 +210,57 @@ public class InMemoryTaskManager implements TaskManager {
         }
         // if all subtask has status new or epic is empty => epic status is new
         Status status = Status.IN_PROGRESS;
-
         if (((statusNew == count) || count == 0)) status = Status.NEW;
         else if ((statusDone == count)) status = Status.DONE;
+        Epic epic = epics.get(epicID);
+        epic.setStatus(status);
+        getEpicStartTime(epic);
+        getEpicDuration(epic);
+    }
 
-        epics.get(epicID).setStatus(status);
+    private void getEpicStartTime(Epic epic) {
+        subtasks.values().stream()
+                .filter((subtask) -> (subtask.getEpicID() == epic.getTaskID()) && (subtask.getStartTime() != null))
+                .min(Comparator.comparing(Task::getStartTime))
+                .map(Task::getStartTime)
+                .ifPresent(epic::setStartTime);
+    }
+
+    private void getEpicDuration(Epic epic) {
+        long epicDuration =
+                subtasks.values().stream()
+                        .filter((subtask) -> (subtask.getEpicID() == epic.getTaskID()) && (subtask.getDuration() != null))
+                        .map(Task::getDuration)
+                        .map(Duration::toMillis)
+                        .reduce(0L, Long::sum);
+        epic.setDuration(Duration.ofMillis(epicDuration));
+    }
+    // ? Это лишь один из кейсов пересечения, нужно проверить все
+    //  - У меня немного другое решение
+//    в твоем примере (комментарии в GitHub) ты находишь пересечение
+//    используя только начальное время отрезков start1,start2 , при этом
+//    условие для проверки на пересечение получается немного громоздким
+//    Я рассчитываю начальное и конечное время отрезка и получается что в условие
+//    для расчета пересечение получается компактнее
+//    в тестах есть проверка пересечения (в моей реализации) все работает
+
+    public boolean isIntercepted(Task task1, Task task2) {
+        if ((task1.getStartTime() == null) || (task2.getStartTime() == null)) return false;
+        LocalDateTime timeAStart = task1.getStartTime();
+        LocalDateTime timeAStop = timeAStart.plus(task1.getDuration());
+        LocalDateTime timeBStart = task2.getStartTime();
+        LocalDateTime timeBStop = timeBStart.plus(task2.getDuration());
+        return timeAStart.isBefore(timeBStop) && (timeAStop.isAfter(timeBStart));
+    }
+
+    public boolean checkTaskInterception(Task newTask) {
+        return sortedList.stream()
+                .anyMatch(task -> isIntercepted(newTask, task));
+    }
+
+    @Override
+    public Set<Task> getPrioritizedTasks() {
+        return sortedList;
     }
 
 }
