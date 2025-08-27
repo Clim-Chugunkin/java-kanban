@@ -26,7 +26,4 @@ public class Managers {
         return new InMemoryHistoryManager();
     }
 
-    public static TaskManager getFileBackedTaskManager(File file) throws ManagerSaveException, IntersectedTaskException {
-        return FileBackedTaskManager.loadFromFile(file);
-    }
 }

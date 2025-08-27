@@ -20,7 +20,6 @@ public class InMemoryTaskManager implements TaskManager {
     protected final TreeSet<Task> sortedList = new TreeSet<>();
     private int countID = 1;
 
-
     @Override
     //методы для  создания задачи, епика, подзадачи  (пункт 2.d)
     public int addTask(Task task) throws IntersectedTaskException {
@@ -215,11 +214,11 @@ public class InMemoryTaskManager implements TaskManager {
         else if ((statusDone == count)) status = Status.DONE;
         Epic epic = epics.get(epicID);
         epic.setStatus(status);
-        estimateEpicStart(epic);
-        estimateEpicDuration(epic);
+        getEpicStartTime(epic);
+        getEpicDuration(epic);
     }
 
-    private void estimateEpicStart(Epic epic) {
+    private void getEpicStartTime(Epic epic) {
         subtasks.values().stream()
                 .filter((subtask) -> (subtask.getEpicID() == epic.getTaskID()) && (subtask.getStartTime() != null))
                 .min(Comparator.comparing(Task::getStartTime))
@@ -227,7 +226,7 @@ public class InMemoryTaskManager implements TaskManager {
                 .ifPresent(epic::setStartTime);
     }
 
-    private void estimateEpicDuration(Epic epic) {
+    private void getEpicDuration(Epic epic) {
         long epicDuration =
                 subtasks.values().stream()
                         .filter((subtask) -> (subtask.getEpicID() == epic.getTaskID()) && (subtask.getDuration() != null))
