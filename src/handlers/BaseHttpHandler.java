@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-abstract public class BaseHttpHandler implements HttpHandler {
+public abstract  class BaseHttpHandler implements HttpHandler {
     protected final Gson gson = getJsonWithAdapters();
 
     private void sendResponse(HttpExchange exchange, String text, int code) throws IOException {
