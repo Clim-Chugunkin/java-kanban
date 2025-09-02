@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 
 abstract public class TaskHandler extends BaseHttpHandler {
-    TaskManager manager;
+    protected TaskManager manager;
 
     public TaskHandler(TaskManager manager) {
         this.manager = manager;
