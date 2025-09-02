@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 
-abstract class TaskHandler extends BaseHttpHandler {
+public abstract class TaskHandler extends BaseHttpHandler {
     protected TaskManager manager;
 
     public TaskHandler(TaskManager manager) {
