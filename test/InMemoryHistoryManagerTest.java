@@ -1,23 +1,15 @@
 import exceptions.IntersectedTaskException;
 import exceptions.ManagerSaveException;
 import manager.*;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static task.Status.NEW;
 
-import task.Epic;
-import task.Status;
-import task.Subtask;
 import task.Task;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 public class InMemoryHistoryManagerTest {
 

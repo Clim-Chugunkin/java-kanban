@@ -81,22 +81,33 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void clearTasks() {
         //удаляем все задачи из истории
-        for (Task task : tasks.values())
+        for (Task task : tasks.values()) {
             history.remove(task.getTaskID());
+            sortedList.remove(task);
+        }
+
+        //удаляем все задачи из sortedList
+
         tasks.clear();
     }
 
     @Override
     public void clearEpics() {
-        for (Epic epic : epics.values())
+        for (Epic epic : epics.values()) {
             history.remove(epic.getTaskID());
+            sortedList.remove(epic);
+        }
+
         epics.clear();
     }
 
     @Override
     public void clearSubtask() {
-        for (Subtask subtask : subtasks.values())
+        for (Subtask subtask : subtasks.values()) {
             history.remove(subtask.getTaskID());
+            sortedList.remove(subtask);
+        }
+
         subtasks.clear();
         //updating all epics
         //если у эпика нет подзадач или все они имеют статус NEW, то статус должен быть NEW.
@@ -146,8 +157,13 @@ public class InMemoryTaskManager implements TaskManager {
     //методы для  удаления по идентификатору  (пункт 2.e)
     @Override
     public void eraseTaskByID(int id) {
-        tasks.remove(id);
-        history.remove(id);
+        Task task = tasks.get(id);
+        if (task != null) {
+            tasks.remove(id);
+            history.remove(id);
+            sortedList.remove(task);
+        }
+
     }
 
     @Override
@@ -166,16 +182,25 @@ public class InMemoryTaskManager implements TaskManager {
             if (subtask.getTaskID() == id) iterator.remove();
             history.remove(subtask.getTaskID());
         }
-        epics.remove(id);
-        history.remove(id);
+        Epic epic = epics.get(id);
+        if (epic != null) {
+            epics.remove(id);
+            history.remove(id);
+            sortedList.remove(epic);
+        }
+
     }
 
     @Override
     public void eraseSubtaskByID(int id) {
         int epicID = subtasks.get(id).getEpicID();
-        subtasks.remove(id);
-        updateEpicStatus(epicID);
-        history.remove(id);
+        Subtask subtask = subtasks.get(id);
+        if (subtask != null) {
+            subtasks.remove(id);
+            updateEpicStatus(epicID);
+            history.remove(id);
+            sortedList.remove(subtask);
+        }
     }
 
     //получение списка задач епика 3.a
@@ -246,6 +271,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     public boolean isIntercepted(Task task1, Task task2) {
         if ((task1.getStartTime() == null) || (task2.getStartTime() == null)) return false;
+        if (task1.getTaskID() == task2.getTaskID()) return false;
         LocalDateTime timeAStart = task1.getStartTime();
         LocalDateTime timeAStop = timeAStart.plus(task1.getDuration());
         LocalDateTime timeBStart = task2.getStartTime();
