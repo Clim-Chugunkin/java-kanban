@@ -280,9 +280,10 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 time.plus(Duration.ofMinutes(10)),
                 Duration.ofMinutes(5),
                 epic.getTaskID());
+        taskManager.addSubTask(subtask3);
         taskManager.addSubTask(subtask1);
         taskManager.addSubTask(subtask2);
-        taskManager.addSubTask(subtask3);
+
         taskManager.addSubTask(subtask4);
         assertEquals(subtask4, taskManager.getPrioritizedTasks().toArray()[0]);
         assertEquals(subtask1, taskManager.getPrioritizedTasks().toArray()[1]);

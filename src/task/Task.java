@@ -136,8 +136,8 @@ public class Task implements Comparable<Task> {
     @Override
     public int compareTo(Task o) {
         //если время не задано устанавливаем самый низкии приоритет
-        if ((this.startTime == null) || (this.duration == null)) return 2;
-        if ((o.startTime == null) || (o.duration == null)) return 2;
+        if ((this.startTime == null) || (this.duration == null)) return 1;
+        if ((o.startTime == null) || (o.duration == null)) return -1;
         if (o.startTime.isAfter(this.startTime)) return -1;
         if (o.startTime.equals(this.startTime)) return 0;
         return 1;
