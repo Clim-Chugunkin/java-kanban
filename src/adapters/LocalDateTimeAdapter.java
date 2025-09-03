@@ -13,14 +13,19 @@ public class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
 
     @Override
     public void write(JsonWriter jsonWriter, LocalDateTime localDateTime) throws IOException {
-        if (localDateTime == null) jsonWriter.value("null");
-        else jsonWriter.value(localDateTime.format(formatter));
+        if (localDateTime == null) {
+            jsonWriter.value("null");
+        } else {
+            jsonWriter.value(localDateTime.format(formatter));
+        }
     }
 
     @Override
     public LocalDateTime read(JsonReader jsonReader) throws IOException {
         String jsonStr = jsonReader.nextString();
-        if (jsonStr.equals("null")) return null;
+        if (jsonStr.equals("null")) {
+            return null;
+        }
         return LocalDateTime.parse(jsonStr, formatter);
     }
 }

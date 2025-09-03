@@ -38,11 +38,12 @@ public abstract  class BaseHttpHandler implements HttpHandler {
 
     @Override
     public final void handle(HttpExchange exchange) throws IOException {
+        HttpMethod httpMethod = HttpMethod.valueOf(exchange.getRequestMethod());
         try {
-            switch (exchange.getRequestMethod()) {
-                case "GET" -> sendResponse(exchange, doGet(exchange), 200);
-                case "POST" -> sendResponse(exchange, doPost(exchange), 201);
-                case "DELETE" -> sendResponse(exchange, doDelete(exchange), 200);
+            switch (httpMethod) {
+                case GET -> sendResponse(exchange, doGet(exchange), 200);
+                case POST -> sendResponse(exchange, doPost(exchange), 201);
+                case DELETE -> sendResponse(exchange, doDelete(exchange), 200);
             }
         } catch (IntersectedTaskException ex) {
             sendResponse(exchange, ex.getMessage(), 406);
